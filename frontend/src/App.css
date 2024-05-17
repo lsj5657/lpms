@@ -1,0 +1,23 @@
+.App {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.View {
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+}
+.ViewLeft {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  height: 80vh;
+  margin-right: 20px;
+}
+.ViewRight {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}

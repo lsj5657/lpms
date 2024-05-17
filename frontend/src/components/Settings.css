@@ -1,0 +1,28 @@
+.Settings Span {
+  font-size: 13px;
+  font-weight: 1000;
+}
+.SettingCheckBoxAndName {
+  display: flex;
+  gap: 3px;
+}
+.SettingCheckBoxLine {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  width: 100%;
+}
+.Settings {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+}
+.Settings input {
+  width: 15px;
+}
+.SettingTitle {
+  font-size: 13px;
+  font-weight: 1000;
+  width: 60px;
+}
