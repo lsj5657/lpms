@@ -1,0 +1,66 @@
+<!-- resources/templates/step1.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Graph Example</title>
+    <!-- Chart.js 라이브러리 로드 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<h1>Graph Example</h1>
+
+<form th:action="@{'/step2'}" method="GET">
+    <!-- 서버에 전송할 값 (selectedIdx=2) -->
+    <input type="hidden" name="selectedIdx" th:value="${selectedIdx}" />
+
+    <!-- 서버로 GET 요청을 보내는 버튼 -->
+    <button type="submit">FFT</button>
+</form>
+<!-- 캔버스 요소 생성 -->
+<canvas id="myChart" width="400" height="400"></canvas>
+
+<!-- 데이터 수신 및 그래프 그리기 -->
+<script>
+    // 컨트롤러에서 전달된 데이터 받기
+    const data = [[${data}]] ;
+    //console.log("Received data:", data);
+
+    // x축 및 y축 데이터 생성
+    const labels = Array.from({ length: data.length }, (_, i) => i + 1); // x축 레이블 (1, 2, 3, ...)
+    const values = data; // y축 데이터 (data)
+
+    // 그래프 생성
+    const ctx = document.getElementById('myChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line', // 라인 그래프
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Example Data',
+                data: values,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: false, // 채우지 않음
+                tension: 0.1
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'X-Axis'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Y-Axis'
+                    }
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

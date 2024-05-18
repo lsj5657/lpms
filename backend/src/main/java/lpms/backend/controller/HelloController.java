@@ -1,4 +1,4 @@
-package lpms.backend.controllers;
+package lpms.backend.controller;
 
 import lpms.backend.models.DataPoint;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +14,10 @@ public class HelloController {
     public List<DataPoint> getGraphData() {
         // 예시 데이터
         return Arrays.asList(
-            new DataPoint(1.0, -1.0),
-            new DataPoint(2.0, -4.0),
-            new DataPoint(3.0, 9.0),
-            new DataPoint(4.0, -6.0),
+            new DataPoint(1.0, 1.0),
+            new DataPoint(2.0, 2.0),
+            new DataPoint(3.0, 3.0),
+            new DataPoint(4.0, 4.0),
             new DataPoint(5.0, 25.0)
         );
     }
