@@ -15,17 +15,18 @@ ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 const Graph = () => {
   const [graphData, setGraphData] = useState([]);
+  const [selectedIdx, setSelectedIdx] = useState(0); // 초기값을 1로 설정
 
   useEffect(() => {
     axios
-      .get("/api/graph-data")
-      .then((res) => {
-        setGraphData(res.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
+        .get(`/step1/api?selectedIdx=${selectedIdx}`)
+        .then((res) => {
+          setGraphData(res.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+  }, [selectedIdx]); // selectedIdx가 변경될 때마다 useEffect가 실행
 
   const data = {
     datasets: [
@@ -53,9 +54,15 @@ const Graph = () => {
   };
 
   return (
-    <div>
-      = <Line data={data} options={options} />
-    </div>
+      <div>
+        <input
+            type="number"
+            value={selectedIdx}
+            onChange={(e) => setSelectedIdx(e.target.value)}
+            placeholder="Enter selectedIdx"
+        />
+        <Line data={data} options={options} />
+      </div>
   );
 };
 
