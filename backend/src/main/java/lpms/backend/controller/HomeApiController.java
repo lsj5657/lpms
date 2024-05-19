@@ -17,19 +17,19 @@ import java.util.List;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class HomeController {
+public class HomeApiController {
 
     private final SignalDataService service;
     private static final String folderPath = "D:\\lpms_binary_data";
 
-    @GetMapping("/home")
+    @GetMapping("/home/api")
     public String home(Model model){
         loadBinaryFile();
 
         List<BinaryData> binaryDataList = service.findAllBinaryData();
         log.info("binaryListSize={}", binaryDataList.size());
         model.addAttribute("binaryDataList",binaryDataList);
-        return "home";
+        return "homeapi";
     }
 
     private void loadBinaryFile() {
