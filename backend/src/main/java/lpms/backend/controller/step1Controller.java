@@ -13,9 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -35,9 +33,76 @@ public class step1Controller {
 
         int ch_id=1;
         List<Float> ListByCh= floatList.get(ch_id);
+
+        stft(ListByCh);
         model.addAttribute("data",ListByCh);
         model.addAttribute("selectedIdx", selectedIdx);
         return "step1";
+    }
+
+
+    private static void stft(List<Float> ListByCh) {
+        log.info("python start");
+        String pythonPath = "C:\\Users\\lsj\\AppData\\Local\\Programs\\Python\\Python312\\python.exe";
+        String pythonHome = "D:\\python";
+        String pythonScriptPath = "D:\\python\\stft2.py";
+
+        try{
+            // 외부 프로세스 실행
+            ProcessBuilder pb = new ProcessBuilder(pythonPath, pythonScriptPath);
+            Process process = pb.start();
+
+
+            // Python 스크립트로 데이터 전달
+            OutputStream outputStream = process.getOutputStream();
+            StringBuilder sb = new StringBuilder();
+            //20만개
+           for (Float value : ListByCh) {
+                sb.append(value.toString()).append(",");
+            }
+
+
+            // 마지막 콤마 제거
+            sb.deleteCharAt(sb.length() - 1);
+            outputStream.write(sb.toString().getBytes());
+            outputStream.flush();
+            outputStream.close();
+
+            // Python 스크립트 실행 결과 확인
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            int cnt=0;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+                cnt++;
+            }
+
+            log.info("cnt={}", cnt);
+
+            InputStream errorStream = process.getErrorStream();
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
+
+            String errorLine;
+            while ((errorLine = errorReader.readLine()) != null) {
+                // 오류 처리
+                System.out.println("errorLine = " + errorLine);
+            }
+
+            // 외부 프로세스가 종료되길 대기
+            int exitCode = process.waitFor();
+            System.out.println("exitCode = " + exitCode);
+
+            // 프로세스 종료
+            process.destroy();
+
+            int exitValue = process.exitValue();
+            System.out.println("exitValue = " + exitValue);
+
+            log.info("python finished");
+
+        }catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
     
 
