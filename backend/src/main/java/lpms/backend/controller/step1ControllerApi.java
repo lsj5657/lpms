@@ -31,7 +31,8 @@ public class step1ControllerApi {
     @GetMapping("/step1/api")
     public List<DataPoint> step1(@RequestParam("selectedIdx") int selectedIdx, Model model) throws IOException, ClassNotFoundException {
         log.info("selectedIdx: " + selectedIdx);
-        List<List<Float>> floatList = fileOpen(Long.valueOf(selectedIdx));
+
+        List<List<Float>> floatList = fileOpen(Long.valueOf(selectedIdx)+1);// DB의 id 값이 1부터 시작이므로 보정
 
         int ch_id=0;
         List<Float> ListByCh= floatList.get(ch_id);
@@ -80,16 +81,16 @@ public class step1ControllerApi {
             }
         }
 
-
         printFloatList(floatList,chInfoList);
-        log.info("size={}", floatList.get(1).size() * 18);
+        log.info("sensitivity={}", headerInfo.getFSensitivity());
+        log.info("size={}", floatList.get(0).size() * 18);
 
         return floatList;
     }
 
     private void printFloatList(List<List<Float>> floatList, List<ChInfo> chInfoList) {
         for (int i=0; i<18; i++){
-            int ch_id= 100+i;
+            int ch_id= 101+i;
             System.out.print("v" + ch_id+": ");
             //System.out.println("chInfoList = " + chInfoList.get(i));
             //csv파일과 비교하기 위해 현재 일부 값만을 출력
