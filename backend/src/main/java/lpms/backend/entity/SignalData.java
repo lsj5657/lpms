@@ -2,6 +2,7 @@ package lpms.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lpms.enums.EventType;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -12,13 +13,15 @@ public class SignalData {
     @Column(name = "signal_data_id")
     private Long id;
 
-    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "binary_data_id")
-    private BinaryData binaryData;
 
-    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "graph_data_id")
-    private GraphData graphData;
+    private String filePath;
+    private String fileName;
+    private Boolean status;
+
+    @Enumerated(EnumType.STRING)
+    private EventType Type;
+
+    private Boolean aiResult;
 }
 
 
