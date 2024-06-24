@@ -1,4 +1,4 @@
-package lpms.backend.models;
+package lpms.backend.utils;
 
 public class DataPoint {
     private double x;

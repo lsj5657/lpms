@@ -14,15 +14,20 @@ public class SignalData {
     private Long id;
 
 
+
     private String filePath;
     private String fileName;
+    private String time;
+    public short channel;
     private Boolean status;
 
     @Enumerated(EnumType.STRING)
     private EventType Type;
 
     private Boolean aiResult;
+    private Float aiProbability;
 }
+
 
 
 

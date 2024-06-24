@@ -18,12 +18,20 @@ public class SignalDataDTO {
 
     public SignalDataDTO(SignalData signalData, HeaderInfo headerInfo) {
         this.time=headerInfo.getEvent_Date();
-        this.channel = "V"+ String.valueOf(headerInfo.Event_Ch+101);
+        this.channel = "V"+ (headerInfo.Event_Ch+101);
         this.status = signalData.getStatus();
         this.type = String.valueOf(signalData.getType());
         this.fileName = signalData.getFileName();
     }
 
     public SignalDataDTO() {
+    }
+
+    public SignalDataDTO(SignalData signalData) {
+        this.time=signalData.getTime();
+        this.channel = "V"+ (signalData.getChannel()+101);
+        this.status = signalData.getStatus();
+        this.type = String.valueOf(signalData.getType());
+        this.fileName = signalData.getFileName();
     }
 }

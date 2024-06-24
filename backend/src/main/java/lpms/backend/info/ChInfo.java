@@ -4,8 +4,11 @@ package lpms.backend.info;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lpms.backend.utils.ByteUtils;
+import lpms.backend.utils.FileUtils;
 
 import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 @Getter @Setter
@@ -48,8 +51,9 @@ public class ChInfo
 
     public static ChInfo readChannelInfo(DataInputStream dis) throws IOException {
         ChInfo data = new ChInfo();
+        
 
-        data.Ch_No = dis.readShort();
+        data.Ch_No = ByteUtils.readShortLittleEndian(dis);
         data.Ch_Type = dis.readShort();
         data.Max_Delay_Time = dis.readFloat();
 
