@@ -3,37 +3,38 @@ package lpms.backend.info;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import static lpms.backend.utils.ByteUtils.*;
 
+/**
+ * Class representing header information.
+ */
 @Getter @Setter
 @ToString
+@Slf4j
 public class HeaderInfo {
-    public String SiteID;
-    public String sPlant;
-    public short System_ID;
-    public SystemType sType;
-    public short Event_Ch;
-    public short Total_Ch_Number;
-    public short EventType;
-    public String Event_Date;
-    public short Alarm_Result;
-    public String Signal_Verification_Result;
-    public int Sampling_Rate;
-    public short User_ID;
-    public short Signal_Verificaion_Selection;
-    public int Event_Duration;
-    public String Signal_Type;
-    public float fSensitivity;
-    public float fMilsV;
-    public int nLength;
+    private String siteId;
+    private String sPlant;
+    private short systemId;
+    private SystemType sType;
+    private short eventCh;
+    private short totalChNumber;
+    private short eventType;
+    private String eventDate;
+    private short alarmResult;
+    private String signalVerificationResult;
+    private int samplingRate;
+    private short userID;
+    private short signalVerificationSelection;
+    private int eventDuration;
+    private String signalType;
+    private float fSensitivity;
+    private float fMilsV;
+    private int nLength;
 
     public static enum SystemType {
         LPMS_BIN,
@@ -42,6 +43,13 @@ public class HeaderInfo {
         IVMS
     }
 
+    /**
+     * Reads header information from a DataInputStream. (64 * 8 bytes)
+     *
+     * @param dis the DataInputStream to read from
+     * @return the populated HeaderInfo object
+     * @throws IOException if an I/O error occurs
+     */
     public static HeaderInfo readHeaderInfo(DataInputStream dis) throws IOException {
         HeaderInfo headerInfo = new HeaderInfo();
 
@@ -49,60 +57,60 @@ public class HeaderInfo {
 
         buffer = new byte[8];
         dis.readFully(buffer);
-        headerInfo.SiteID = new String(buffer).trim();
+        headerInfo.siteId = new String(buffer).trim();
 
-        if (headerInfo.SiteID.toLowerCase().contains("hanbit")) {
+        if (headerInfo.siteId.toLowerCase().contains("hanbit")) {
             headerInfo.sPlant = "한빛";
-        } else if (headerInfo.SiteID.toLowerCase().contains("hanul")) {
+        } else if (headerInfo.siteId.toLowerCase().contains("hanul")) {
             headerInfo.sPlant = "한울";
         }
 
-        headerInfo.System_ID = dis.readShort();
+        headerInfo.systemId = dis.readShort();
         headerInfo.sType = SystemType.LPMS_BIN;
 
-        headerInfo.Event_Ch = readShortLittleEndian(dis);
-        headerInfo.Total_Ch_Number = readShortLittleEndian(dis);
-        headerInfo.EventType = dis.readShort();
+        headerInfo.eventCh = readShortLittleEndian(dis);
+        headerInfo.totalChNumber = readShortLittleEndian(dis);
+        headerInfo.eventType = dis.readShort();
 
         buffer = new byte[24];
         dis.readFully(buffer);
-        headerInfo.Event_Date = new String(buffer).trim();
+        headerInfo.eventDate = new String(buffer).trim();
 
-        headerInfo.Alarm_Result = readShortLittleEndian(dis);
+        headerInfo.alarmResult = readShortLittleEndian(dis);
 
         buffer = new byte[6];
         dis.readFully(buffer);
-        headerInfo.Signal_Verification_Result=new String(buffer).trim();
+        headerInfo.signalVerificationResult =new String(buffer).trim();
 
-        headerInfo.Sampling_Rate = readIntLittleEndian(dis);
-        headerInfo.User_ID = dis.readShort();
-        headerInfo.Signal_Verificaion_Selection = readShortLittleEndian(dis);
-        headerInfo.Event_Duration = readIntLittleEndian(dis);
+        headerInfo.samplingRate = readIntLittleEndian(dis);
+        headerInfo.userID = dis.readShort();
+        headerInfo.signalVerificationSelection = readShortLittleEndian(dis);
+        headerInfo.eventDuration = readIntLittleEndian(dis);
 
         int nSignalType = readShortLittleEndian(dis);
 
         if (headerInfo.sType == SystemType.LPMS_BIN) {
             switch (nSignalType) {
                 case 0:
-                    headerInfo.Signal_Type = "BackGround Noise";
+                    headerInfo.signalType = "BackGround Noise";
                     break;
                 case 1:
-                    headerInfo.Signal_Type = "Event";
+                    headerInfo.signalType = "Event";
                     break;
                 case 2:
-                    headerInfo.Signal_Type = "PST";
+                    headerInfo.signalType = "PST";
                     break;
                 case 3:
-                    headerInfo.Signal_Type = "Impact Test";
+                    headerInfo.signalType = "Impact Test";
                     break;
                 case 4:
-                    headerInfo.Signal_Type = "Baseline Test";
+                    headerInfo.signalType = "Baseline Test";
                     break;
                 case 5:
-                    headerInfo.Signal_Type = "RCP Trigger";
+                    headerInfo.signalType = "RCP Trigger";
                     break;
                 default:
-                    headerInfo.Signal_Type = "Unidentified";
+                    headerInfo.signalType = "Unidentified";
                     break;
             }
         } else {
@@ -118,15 +126,15 @@ public class HeaderInfo {
         dis.skipBytes(8 * (64 - 9));
 
 
-        double itmp = (double) headerInfo.Sampling_Rate * headerInfo.Event_Duration;
+        double itmp = (double) headerInfo.samplingRate * headerInfo.eventDuration;
         double tmps = itmp / 1000.0;
         headerInfo.nLength = (int) tmps;
         if (itmp < 0) {
-            float tmp = (float) (headerInfo.Event_Duration / 1000.0);
-            headerInfo.nLength = headerInfo.Sampling_Rate * (int) tmp;
+            float tmp = (float) (headerInfo.eventDuration / 1000.0);
+            headerInfo.nLength = headerInfo.samplingRate * (int) tmp;
         }
 
-
+        headerInfo.nLength++;
         return headerInfo;
     }
 

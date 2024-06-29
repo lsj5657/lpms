@@ -1,0 +1,8 @@
+.Info {
+  display: flex;
+  flex-direction: column;
+  margin-top: -5px;
+  margin-left: 15px;
+  gap: 5px;
+  padding: 0;
+}

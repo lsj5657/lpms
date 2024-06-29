@@ -7,12 +7,18 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
+/**
+ * Repository interface for SignalData entity.
+ * Extends JpaRepository to provide CRUD operations.
+ */
 public interface SignalDataRepository extends JpaRepository<SignalData, Long> {
 
-    // fileName 리스트 반환 함수
-    @Query("SELECT s.fileName FROM SignalData s")
-    List<String> findAllFileNames();
 
-    // fileName 으로 SignalData 찾기 함수
+    /**
+     * Find a SignalData entity by its file name.
+     *
+     * @param fileName the name of the file
+     * @return the SignalData entity associated with the given file name
+     */
     SignalData findByFileName(String fileName);
 }

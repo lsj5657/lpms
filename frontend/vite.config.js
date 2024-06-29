@@ -18,4 +18,7 @@ export default defineConfig({
       },
     }, // proxy 설정
   },
+  optimizeDeps: {
+    include: ["styled-components"],
+  },
 });

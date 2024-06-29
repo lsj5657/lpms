@@ -2,27 +2,17 @@ package lpms.backend.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lpms.backend.dto.ResultDTO;
 import lpms.backend.dto.SignalDataDTO;
-import lpms.backend.entity.SignalData;
-import lpms.backend.info.ChInfo;
-import lpms.backend.info.FileInfo;
-import lpms.backend.info.HeaderInfo;
 import lpms.backend.service.SignalProcessingService;
 import lpms.backend.utils.*;
-import lpms.backend.service.SignalDataService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-
-
-import static lpms.backend.utils.FileUtils.*;
-import static lpms.backend.utils.ProjectConstans.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,54 +20,70 @@ import static lpms.backend.utils.ProjectConstans.*;
 public class apiController {
     private final SignalProcessingService signalProcessingService;
 
-
-    //주어진 파일에 대한 시간 그래프를 요청하는 url
-    //선택된 채널이 없으면 이벤트 채널, 있으면 선택된 채널로 수행
+    /**
+     * Endpoint to request the time graph for a given file.
+     * If no channel is selected, the event channel is used; otherwise, the selected channel is used.
+     *
+     * @param selectedFileName the name of the file to process
+     * @param selectedCh the selected channel, can be null
+     * @return a list of DataPoints representing the time graph
+     * @throws IOException if an I/O error occurs
+     * @throws ClassNotFoundException if the class of a serialized object cannot be found
+     */
     @GetMapping("/api/time/{selectedFileName}")
     public List<DataPoint> timeGraph(@PathVariable String selectedFileName,
                                      @RequestParam(required = false) Integer selectedCh) throws IOException, ClassNotFoundException {
-
         log.info("Time Graph for fileName={}", selectedFileName);
-
-        return signalProcessingService.processTimeGraph(selectedFileName,selectedCh);
+        return signalProcessingService.processTimeGraph(selectedFileName, selectedCh);
     }
 
-
-    //주어진 파일에 대한 시간 그래프를 요청하는 url
-    //선택된 채널이 없으면 이벤트 채널, 있으면 선택된 채널로 수행
+    /**
+     * Endpoint to request the frequency graph for a given file.
+     * If no channel is selected, the event channel is used; otherwise, the selected channel is used.
+     *
+     * @param selectedFileName the name of the file to process
+     * @param selectedCh the selected channel, can be null
+     * @return a list of DataPoints representing the frequency graph
+     * @throws IOException if an I/O error occurs
+     * @throws ClassNotFoundException if the class of a serialized object cannot be found
+     */
     @GetMapping("/api/freq/{selectedFileName}")
     public List<DataPoint> freqGraph(@PathVariable String selectedFileName,
                                      @RequestParam(required = false) Integer selectedCh) throws IOException, ClassNotFoundException {
-        
         log.info("Frequency Graph for fileName={}", selectedFileName);
-
-        return signalProcessingService.processFrequencyGraph(selectedFileName,selectedCh);
+        return signalProcessingService.processFrequencyGraph(selectedFileName, selectedCh);
     }
 
-    // 주어진 파일에 대한 stft 이미지를 생성하고, ai 결과를 요청하는 url
-    // stft는 선택된 채널이 없으면 이벤트 채널, 있으면 선택된 채널로 수행
-    // ai는 이벤트 채널로 수행
+    /**
+     * Endpoint to generate the STFT image and request AI results for a given file.
+     * STFT is performed on the event channel if no channel is selected, otherwise on the selected channel.
+     * AI is performed on the event channel.
+     *
+     * @param selectedFileName the name of the file to process
+     * @param selectedCh the selected channel, can be null
+     * @return a Result object containing the STFT and AI results
+     * @throws IOException if an I/O error occurs
+     * @throws ClassNotFoundException if the class of a serialized object cannot be found
+     */
     @GetMapping("/api/result/{selectedFileName}")
-    public Result getResult(@PathVariable String selectedFileName,
-                            @RequestParam(required = false) Integer selectedCh) throws IOException, ClassNotFoundException {
-        log.info("stft and ai for fileName ={}", selectedFileName);
+    public ResultDTO getResult(@PathVariable String selectedFileName,
+                               @RequestParam(required = false) Integer selectedCh) throws IOException, ClassNotFoundException {
+        log.info("STFT and AI for fileName ={}", selectedFileName);
         log.info("selectedCh = {}", selectedCh);
-
-        return signalProcessingService.processResult(selectedFileName,selectedCh);
+        return signalProcessingService.processResultV2(selectedFileName, selectedCh);
     }
 
-
-    // DB에 저장된 파일
+    /**
+     * Endpoint to load files stored in the database.
+     *
+     * @return a list of SignalDataDTO objects representing the loaded files
+     * @throws IOException if an I/O error occurs
+     * @throws ClassNotFoundException if the class of a serialized object cannot be found
+     */
     @GetMapping("/api/files")
     public List<SignalDataDTO> loadFiles() throws IOException, ClassNotFoundException {
         log.info("Loading all files");
-
         return signalProcessingService.loadAllFiles();
     }
-
-
-
-
-
 }
 

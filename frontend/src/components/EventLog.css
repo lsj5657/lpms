@@ -1,0 +1,65 @@
+.EventLog {
+  gap: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  flex-direction: column;
+  display: flex;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+.EventLog .list_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-grow: 1;
+}
+
+.EventLog .menu_bar {
+  display: flex;
+  gap: 20px;
+  cursor: pointer;
+  text-align-last: center;
+}
+
+.EventLog .menu_name {
+  border-bottom: 5px;
+  border-top: 0px;
+  border-right: 0px;
+  border-left: 0px;
+  border-style: solid;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 20px;
+}
+
+.EventLog .menu_bar select {
+  width: 100px;
+  background-color: white;
+  border: 2px;
+  border-radius: 5px;
+  border-style: solid;
+  padding: 10px 20px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  appearance: none;
+}
+
+.EventLog .list_wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.EventLog .list_wrapper::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+}
+
+.EventLog .list_wrapper::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}

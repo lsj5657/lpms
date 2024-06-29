@@ -11,6 +11,9 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+/**
+ * Class representing channel information.
+ */
 @Getter @Setter
 @ToString
 public class ChInfo
@@ -49,6 +52,14 @@ public class ChInfo
     private float drms;
     private long uiEventCountin100;
 
+
+    /**
+     * Reads channel information from a DataInputStream.
+     *
+     * @param dis the DataInputStream to read from
+     * @return the populated ChInfo object
+     * @throws IOException if an I/O error occurs
+     */
     public static ChInfo readChannelInfo(DataInputStream dis) throws IOException {
         ChInfo data = new ChInfo();
         
